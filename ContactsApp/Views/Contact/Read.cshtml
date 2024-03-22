@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Contact>
+
+@{
+    ViewData["Title"] = "Lista de Contactos";
+}
+
+<h1 class="text-center">Contactos</h1>
+
+<div class="row">
+    <div class="col-3 offset-9 mb-3">
+        <a asp-action="Create" asp-controller="Contact" class="btn btn-lg btn-success mx-auto float-end">
+            <i class="fa-solid fa-plus"></i> Nuevo Contacto
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="offset-12">
+        <div class="card border">
+            <div class="card-header bg-dark">
+                <h3 class="text-white">Lista de contactos</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    @if(Model.Count() > 0)
+                    {
+                        <table class=" table table-striped table-bordered" id="tbContacts" width="100%" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">@Html.DisplayNameFor(m => m.Id)</th>
+                                    <th class="text-center">@Html.DisplayNameFor(m => m.Name)</th>
+                                    <th class="text-center">@Html.DisplayNameFor(m => m.PhoneNumber)</th>
+                                    <th class="text-center">@Html.DisplayNameFor(m => m.Email)</th>
+                                    <th class="text-center">@Html.DisplayNameFor(m => m.CreationDate)</th>
+                                    <th class="text-center">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(var item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(m => item.Id)</td>
+                                        <td>@Html.DisplayFor(m => item.Name)</td>
+                                        <td>@Html.DisplayFor(m => item.PhoneNumber)</td>
+                                        <td>@Html.DisplayFor(m => item.Email)</td>
+                                        <td class="text-end">@Html.DisplayFor(m => item.CreationDate)</td>
+                                        <td class="text-center">
+                                            <a asp-action="Details" asp-route-id="@item.Id" asp-controller="Contact" class="btn btn-info"> <i class="fa-solid fa-circle-info"></i> </a>
+                                            <a asp-action="Update" asp-route-id="@item.Id" asp-controller="Contact" class="btn btn-warning"> <i class="fa-solid fa-pen-to-square"></i> </a>
+                                            <button onclick="onDelete(@item.Id)" class="btn btn-danger"> <i class="fa-solid fa-trash"></i> </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="text-center">No hay registros</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onDelete(id) { 
+        var result = confirm("¿Estás seguro de que deseas eliminar este registro?");
+
+        if (result) {
+            $.ajax({
+                url: "/Contact/Delete?id=" + id,
+                type: "DELETE",
+                async: true,
+                success: function (response) {
+                    if (response) {
+                        location.reload();
+                    }
+                    else {
+                        alert("No se ha encontrado un registro con Id:", id);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
+</script>                                           
