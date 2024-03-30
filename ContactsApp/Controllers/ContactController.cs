@@ -46,9 +46,9 @@ namespace ContactsApp.Controllers
         {
             if (ModelState.IsValid) {
 
-                contact.CreationDate = DateTime.Now;
+                contact.CreationDate = DateTime.Now.ToUniversalTime()   ;
 
-                await _context.Contacts.FindAsync(contact);
+                await _context.Contacts.AddAsync(contact);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction("Read");
