@@ -13,10 +13,18 @@ namespace ContactsApp.Controllers
             _context = context;
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> Read()
+        //{
+        //    var contactsList = await _context.Contacts.ToListAsync();
+
+        //    return View(contactsList);
+        //}
+
         [HttpGet]
-        public async Task<IActionResult> Read()
+        public IActionResult Read()
         {
-            var contactsList = await _context.Contacts.ToListAsync();
+            var contactsList = _context.Contacts.FromSqlRaw("SELECT * FROM FnGetAllContacts()").ToList();
 
             return View(contactsList);
         }
